@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mAcelSensor;
     private TextView aX,aY,aZ;
     private Button bstart,bstop;
+    private Spinner stype1;
     private boolean swstart;
+    private Integer ntype1=3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aZ = (TextView) findViewById(R.id.aZ);
         bstart = (Button) findViewById(R.id.bstart);
         bstop=(Button) findViewById(R.id.bstop);
+        stype1 = (Spinner) findViewById(R.id.stype1);
+
 
         aX.setText("");
         aY.setText("");
@@ -44,31 +50,66 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 if (!swstart) {
-                    startCapture(MainActivity.this);
+                    startCapture(MainActivity.this,ntype1);
                 }
             }
         });
         bstop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (swstart){
+                if (swstart) {
                     stopCapturing();
                 }
             }
         });
+        stype1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(parent.getContext(), "OnItemSelectedListener : " + position, Toast.LENGTH_SHORT).show();
+                stopCapturing();
+                startCapture(MainActivity.this, position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        stype1.setSelection(3);
 
     }
-    public void startCapture(Context context) {
+    @Override
+
+    public void onResume() {
+        super.onResume();
+        stopCapturing();
+        aX.setText("");
+        aY.setText("");
+        aZ.setText("");
+    }
+
+    public void onStop() {
+        super.onStop();
+        stopCapturing();
+        aX.setText("");
+        aY.setText("");
+        aZ.setText("");
+    }
+    public void onPause() {
+        super.onPause();
+        stopCapturing();
+        aX.setText("");
+        aY.setText("");
+        aZ.setText("");
+    }
+
+    public void startCapture(Context context,Integer ntype1) {
         swstart = true;
 
-        mSensorManager = (SensorManager) getSystemService(
-                context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(context.SENSOR_SERVICE);
 
-        mAcelSensor = mSensorManager
-                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        mSensorManager.registerListener(this, mAcelSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
+        mAcelSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mAcelSensor,ntype1);
     }
 
     public void stopCapturing() {
@@ -103,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aY.setText(savedInstanceState.getString("aY"));
         aZ.setText(savedInstanceState.getString("aZ"));
         if (swstart) {
-            startCapture(MainActivity.this);
+            startCapture(MainActivity.this,ntype1);
         }
     }
 
@@ -138,6 +179,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        Toast.makeText(getApplicationContext(),"cambio a "+(stype1.getSelectedItem()), Toast.LENGTH_LONG).show();
     }
 }
