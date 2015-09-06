@@ -120,23 +120,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:textAlignment="center"
             android:background="#d2d2d2"
-            android:textSize="26sp"
+            android:layout_marginLeft="4sp"
+            android:layout_marginRight="5sp"
             android:entries="@array/Sensor_Delay"
             android:prompt="@string/chosen"
-            android:id="@+id/stype1" />
+            android:id="@+id/stype1"/>
 
 
 
-        <Button
+        <Spinner
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/abc_primary_text_material_dark"
-            android:textSize="26sp"
-            android:text="Detener"
-            android:id="@+id/ssensity"/>
+            android:textAlignment="center"
+            android:background="#d2d2d2"
+            android:layout_marginRight="4sp"
+            android:layout_marginLeft="5sp"
+            android:entries="@array/Sensor_Type"
+            android:prompt="@string/choty"
+            android:id="@+id/stype2"/>
     </LinearLayout>
 
 

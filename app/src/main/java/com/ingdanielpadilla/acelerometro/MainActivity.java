@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mAcelSensor;
     private TextView aX,aY,aZ;
     private Button bstart,bstop;
-    private Spinner stype1;
+    private Spinner stype1,stype2;
     private boolean swstart;
-    private Integer ntype1=3;
+    private Integer ntype1=3,ntype2=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         bstart = (Button) findViewById(R.id.bstart);
         bstop=(Button) findViewById(R.id.bstop);
         stype1 = (Spinner) findViewById(R.id.stype1);
-
+        stype2 = (Spinner) findViewById(R.id.stype2);
 
         aX.setText("");
         aY.setText("");
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 if (!swstart) {
-                    startCapture(MainActivity.this,ntype1);
+                    startCapture(MainActivity.this, ntype1, ntype2);
                 }
             }
         });
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(parent.getContext(), "OnItemSelectedListener : " + position, Toast.LENGTH_SHORT).show();
                 stopCapturing();
-                startCapture(MainActivity.this, position);
+                startCapture(MainActivity.this, position,ntype2);
             }
 
             @Override
@@ -76,6 +76,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
         stype1.setSelection(3);
+
+        stype2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(parent.getContext(), "OnItemSelectedListener : " + position, Toast.LENGTH_SHORT).show();
+                stopCapturing();
+                startCapture(MainActivity.this,ntype1,position*9+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        stype2.setSelection(1);
 
     }
     @Override
@@ -103,12 +118,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aZ.setText("");
     }
 
-    public void startCapture(Context context,Integer ntype1) {
+    public void startCapture(Context context,Integer ntype1,Integer ntype2) {
         swstart = true;
 
         mSensorManager = (SensorManager) getSystemService(context.SENSOR_SERVICE);
 
-        mAcelSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mAcelSensor = mSensorManager.getDefaultSensor(ntype2);
         mSensorManager.registerListener(this, mAcelSensor,ntype1);
     }
 
@@ -144,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         aY.setText(savedInstanceState.getString("aY"));
         aZ.setText(savedInstanceState.getString("aZ"));
         if (swstart) {
-            startCapture(MainActivity.this,ntype1);
+            startCapture(MainActivity.this,ntype1,ntype2);
         }
     }
 

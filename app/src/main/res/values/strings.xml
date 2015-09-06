@@ -13,4 +13,11 @@
         <item>NORMAL</item>
     </string-array>
 
+    <string name="choty">Choose a type</string>
+
+    <string-array name="Sensor_Type">
+        <item>Accelerometer</item>
+        <item>Linear Acelerometer</item>
+    </string-array>
+
 </resources>
